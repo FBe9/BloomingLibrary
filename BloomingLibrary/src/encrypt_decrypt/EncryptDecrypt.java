@@ -9,10 +9,13 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.security.KeyFactory;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.Arrays;
 import javax.crypto.Cipher;
 
 /**
@@ -96,5 +99,39 @@ public class EncryptDecrypt {
             e.printStackTrace();
         }
         return ret;
+    }
+    
+    /**
+     * Metodo de Hash aplicando SHA al texto pasado por parámetro
+     * 
+     * @param texto
+     * @return 
+     */
+    public String hashearTexto(String texto) {
+        MessageDigest messageDigest;
+        String hexadecimal;
+         String resumenString = null;
+        try {
+            messageDigest = MessageDigest.getInstance("SHA-256"); //"SHA-256";
+            byte dataBytes[] = texto.getBytes(); // Texto a bytes
+            messageDigest.update(dataBytes);
+            byte resumen[] = messageDigest.digest(); // Se calcula el resumen
+            resumenString = Arrays.toString(resumen);
+            hexadecimal = Hexadecimal(resumen);
+            
+        } catch (NoSuchAlgorithmException e) {
+        }
+        return resumenString;
+    }
+
+    // Convierte Array de Bytes en hexadecimal
+    static String Hexadecimal(byte[] resumen) {
+    	StringBuilder result = new StringBuilder();
+        for (byte aByte : resumen) {
+            result.append(String.format("%02x", aByte));
+
+        }
+         return result.toString();       
+        
     }
 }
